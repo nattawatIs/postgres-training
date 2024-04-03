@@ -1,0 +1,37 @@
+version: '3.9'
+
+# Define Networks
+networks:
+  pg_network:
+    name: pg_network
+    driver: bridge
+
+# Define Services
+services:
+  # Postgres Database
+  pgdb:
+    image: postgres:15.6
+    container_name: postgresdb
+    volumes:
+      - ./pg_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: samplepgdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "6432:5432"
+    restart: always
+    networks:
+      - pg_network
+  # PgAdmin4
+  pgadmin4:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "nattawat@email.com"
+      PGADMIN_DEFAULT_PASSWORD: "123456"
+    ports:
+      - "8800:80"
+    restart: always
+    networks:
+      - pg_network
